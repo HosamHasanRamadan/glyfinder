@@ -41,7 +41,9 @@ class _LikePageContent extends StatelessWidget {
                   key: ValueKey(fontIcon.id),
                   fontIcon: fontIcon,
                   isLiked: fontIcon.isLiked,
-                  onDownload: () {},
+                  onDownload: () {
+                    fontIconsStore.downloadIcon(fontIcon);
+                  },
                   onLike: (_) {
                     if (!fontIcon.isLiked) {
                       fontIconsStore.like(fontIcon);

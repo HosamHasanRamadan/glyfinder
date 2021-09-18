@@ -1,9 +1,8 @@
 import 'package:dynamic_cached_fonts/dynamic_cached_fonts.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final fontServiceProvider = Provider((ref) => FontService());
 
 class FontService {
+  FontService();
+
   Future<void> loadFont(String fontFamily, String fontUrl) async {
     final dynmaicCache = DynamicCachedFonts(
       url: fontUrl,

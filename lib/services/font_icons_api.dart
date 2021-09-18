@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:riverpod/riverpod.dart';
 
-import 'package:glyfinder/data/font_icon.dart';
-import 'package:glyfinder/data/font_icons_package.dart';
-
-final fontIconsApiProvider = Provider((ref) => FontIconsApi());
+import '../configure_dependencies.dart';
+import '../data/font_icon.dart';
+import '../data/font_icons_package.dart';
 
 class FontIconsApi {
-  final _dio = Dio();
+  late final Dio _dio;
+
+  FontIconsApi() {
+    _dio = getIt<Dio>();
+  }
 
   Future<List<FontIconsPackage>> getAllFontIconsPackages() async {
     final url = Uri.parse(

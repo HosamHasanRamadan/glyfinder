@@ -1,7 +1,4 @@
 import 'package:logger/logger.dart' as l;
-import 'package:riverpod/riverpod.dart';
-
-final loggerProvider = Provider((ref) => Logger());
 
 class Logger {
   late final l.Logger _logger;

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:glyfinder/extensions/extensions.dart';
-import 'package:glyfinder/views/pages/likes_page.dart';
-import 'package:glyfinder/views/pages/search_page.dart';
+import '../../../extensions/extensions.dart';
+import 'likes_page.dart';
+import 'search_page.dart';
 
 class HomePage extends StatelessWidget {
+  static PageRoute route() {
+    return MaterialPageRoute(builder: (_) {
+      return HomePage();
+    });
+  }
+
   final pageViewController = PageController();
   final indexValue = 0.listenable;
 
@@ -37,6 +43,7 @@ class HomePage extends StatelessWidget {
         ),
         Expanded(
           child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             controller: pageViewController,
             children: const [

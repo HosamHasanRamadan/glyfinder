@@ -1,36 +1,25 @@
-import 'package:flutter/material.dart';
-
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod/riverpod.dart';
 
-import 'package:glyfinder/commands/get_font_icons_packages.dart';
-import 'package:glyfinder/commands/load_fonts.dart';
-import 'package:glyfinder/services/logger.dart';
-import 'package:glyfinder/views/pages/home_page.dart';
+import '../configure_dependencies.dart';
+import '../services/logger.dart';
+import '../stores/font_icons_pacakges_store.dart';
+import 'get_font_icons_packages.dart';
+import 'icon_commnds/load_fonts.dart';
 
-final bootstrabProvider =
-    StreamProvider.family<String, BuildContext>((ref, context) async* {
-  final logger = ref.read(loggerProvider);
+final bootstrabProvider = StreamProvider((ref) async* {
+  final logger = getIt<Logger>();
 
   logger.i('bootstraping....');
 
-  logger.i('prepareing local stoarage....');
-  await Hive.initFlutter();
-
   yield 'Loading All Icons....';
-  await ref.read(getFontIconsPacakgesProvider).command.executeWithFuture();
+  final packages = await GetFontIconsPacakges().call();
+  ref.read(fontIconsPackagesStoreProvider).init(packages);
 
   yield 'Loading All Fonts...';
-  await ref.read(loadFontsProvider).command.executeWithFuture();
+  await LoadFonts().call(packages);
 
   yield 'Done';
   logger.i('bootstraping ✅');
 
   await Future<void>.delayed(const Duration(seconds: 1));
-
-  Navigator.pushAndRemoveUntil<void>(
-    context,
-    MaterialPageRoute(builder: (_) => HomePage()),
-    (_) => false,
-  );
 });

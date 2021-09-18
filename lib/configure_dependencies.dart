@@ -1,0 +1,32 @@
+import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'local_storage/liked_icons_storage.dart';
+import 'services/font_icons_api.dart';
+import 'services/font_service.dart';
+import 'services/logger.dart';
+
+final getIt = GetIt.instance;
+
+/// [isUiThread] is helpufull to use for deps prepration in other isolate
+Future<void> configureDependencies({bool isUiThread = true}) async {
+  final modules = _Modules();
+
+  getIt.registerSingleton<Dio>(modules.dio);
+
+  getIt.registerSingleton<Logger>(Logger());
+  getIt.registerSingleton<FontService>(FontService());
+  getIt.registerSingleton<FontIconsApi>(FontIconsApi());
+
+  if (isUiThread) {
+    await Hive.initFlutter();
+
+    final likedIconsStorage = await LikedIconsStorage.open();
+    getIt.registerSingleton<LikedIconsStorage>(likedIconsStorage);
+  }
+}
+
+class _Modules {
+  Dio get dio => Dio();
+}

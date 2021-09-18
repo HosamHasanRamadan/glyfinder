@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:glyfinder/commands/search_for_icons.dart';
-import 'package:glyfinder/stores/font_icons_pacakges_store.dart';
+import '../../../stores/font_icons_pacakges_store.dart';
+import '../icons_search_page.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -46,36 +46,14 @@ class _SearchField extends StatelessWidget {
       width: width,
       child: TextField(
         onSubmitted: (searchValue) {
-          context.read(searhForIconsProvider).command(
-                SearchForIconsParam(
-                  searchValue: searchValue,
-                  context: context,
-                ),
-              );
+          Navigator.of(context).push(IconsSearchPage.route(searchValue));
         },
         textAlign: TextAlign.center,
-        decoration: InputDecoration(
-          suffix: loadingIndicator(
-              context.read(searhForIconsProvider).command.isExecuting),
-          border: const OutlineInputBorder(
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(20))),
         ),
       ),
-    );
-  }
-
-  Widget loadingIndicator(ValueListenable<bool> isLoadingNotifer) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: isLoadingNotifer,
-      builder: (_, value, __) {
-        if (value) {
-          return const SizedBox(
-              height: 15,
-              child: FittedBox(
-                  fit: BoxFit.fill, child: CircularProgressIndicator()));
-        }
-        return const SizedBox.shrink();
-      },
     );
   }
 }

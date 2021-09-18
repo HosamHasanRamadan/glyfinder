@@ -25,7 +25,8 @@ class SearchForIcons {
 
 Future<List<FontIcon>> _searchFor(String value) async {
   // register again because this code runs in different thread
-  await configureDependencies(isUiThread: false);
+  // because web doesn't support @compute yet don't re-register deps because it is already registered
+  if (!kIsWeb) await configureDependencies(isUiThread: false);
 
   return getIt<FontIconsApi>().getIconsMatch(value);
 }

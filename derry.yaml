@@ -1,1 +1,6 @@
 sort_imports: flutter pub run import_sorter:main
+
+pub_gp:
+  - git checkout main
+  - peanut --web-renderer "canvaskit" --extra-args "--base-href=/glyfinder/"
+  - git push origin --set-upstream gh-pages

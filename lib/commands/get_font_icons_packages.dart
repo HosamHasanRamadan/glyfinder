@@ -1,31 +1,25 @@
-import 'package:flutter_command/flutter_command.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:glyfinder/services/font_icons_api.dart';
-import 'package:glyfinder/services/logger.dart';
-import 'package:glyfinder/stores/font_icons_pacakges_store.dart';
-
-final getFontIconsPacakgesProvider =
-    Provider((ref) => GetFontIconsPacakges(ref.read));
+import '../configure_dependencies.dart';
+import '../data/font_icons_package.dart';
+import '../services/font_icons_api.dart';
+import '../services/logger.dart';
 
 class GetFontIconsPacakges {
-  late final Command _command;
-  Command get command => _command;
+  late final FontIconsApi _fontIconsApi;
+  late final Logger _logger;
 
-  GetFontIconsPacakges(Reader read) {
-    _command = Command.createAsyncNoParamNoResult(() async {
-      final service = read(fontIconsApiProvider);
-      final logger = read(loggerProvider);
-
-      logger.i('getting font icons pacakges');
-      final fontIconsPackagesStore = read(fontIconsPackagesStoreProvider);
-      try {
-        final fontIconsPackages = await service.getAllFontIconsPackages();
-        fontIconsPackagesStore.init(fontIconsPackages);
-        logger.i('getting font icons pacakges ✅');
-      } on Exception {
-        logger.e('error while loading icons packages');
-      }
-    });
+  GetFontIconsPacakges() {
+    _fontIconsApi = getIt<FontIconsApi>();
+    _logger = getIt<Logger>();
+  }
+  Future<List<FontIconsPackage>> call() async {
+    _logger.i('getting font icons pacakges');
+    try {
+      final fontIconsPackages = await _fontIconsApi.getAllFontIconsPackages();
+      _logger.i('getting font icons pacakges ✅');
+      return fontIconsPackages;
+    } on Exception {
+      _logger.e('error while loading icons packages');
+      throw UnimplementedError();
+    }
   }
 }

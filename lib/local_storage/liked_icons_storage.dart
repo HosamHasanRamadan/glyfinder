@@ -1,11 +1,8 @@
+import 'dart:async';
+
 import 'package:hive/hive.dart';
-import 'package:riverpod/riverpod.dart';
 
-import 'package:glyfinder/data/font_icon.dart';
-
-final likedIconsStorageProvider = FutureProvider(
-  (ref) => LikedIconsStorage.open(),
-);
+import '../data/font_icon.dart';
 
 class LikedIconsStorage {
   static const storeId = 'likes';
@@ -15,7 +12,6 @@ class LikedIconsStorage {
 
   static Future<LikedIconsStorage> open() async {
     final box = await Hive.openBox<String>(storeId);
-
     return LikedIconsStorage._(box);
   }
 

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:jovial_svg/jovial_svg.dart';
 
-import 'package:glyfinder/data/font_icon.dart';
+import '../../data/font_icon.dart';
 
-typedef OnLike = void Function(bool);
+typedef _OnLike = void Function(bool);
 
-typedef OnDownload = void Function();
+typedef _OnDownload = void Function();
 
 class IconTile extends StatelessWidget {
   final FontIcon fontIcon;
   final bool isLiked;
-  final OnDownload onDownload;
-  final OnLike onLike;
+  final _OnDownload onDownload;
+  final _OnLike onLike;
   const IconTile({
     required this.fontIcon,
     required this.isLiked,
@@ -44,25 +44,7 @@ class IconTile extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (_) {
-                  return Dialog(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ScalableImageWidget.fromSISource(
-                          scale: 2,
-                          si: ScalableImageSource.fromSvgHttpUrl(
-                            fontIcon.svgUrl,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                });
-          },
+          onTap: () {},
           child: Align(
             alignment: Alignment.center,
             child: Column(
@@ -77,7 +59,6 @@ class IconTile extends StatelessWidget {
                     si: ScalableImageSource.fromSvgHttpUrl(fontIcon.svgUrl),
                   ),
                 ),
-                // Gap(10),
                 Text(
                   fontIcon.name,
                   textAlign: TextAlign.center,

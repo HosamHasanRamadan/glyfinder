@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:glyfinder/views/pages/intro_page.dart';
+import 'configure_dependencies.dart';
+import 'views/pages/intro_page.dart';
 
-void main() {
+void main() async {
+  await configureDependencies();
   runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
+    const ProviderScope(child: MyApp()),
   );
 }
 

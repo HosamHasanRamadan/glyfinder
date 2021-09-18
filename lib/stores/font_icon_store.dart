@@ -1,32 +1,48 @@
 import 'package:flutter/foundation.dart';
 
+import 'package:flutter_command/flutter_command.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import 'package:glyfinder/data/font_icon.dart';
+import '../commands/icon_commnds/like_icon.dart';
+import '../commands/icon_commnds/unlike_icon.dart';
+import '../data/font_icon.dart';
 
-final fontIconsStoreProvider =
-    ChangeNotifierProvider((ref) => FontIconsStore());
+final fontIconsStoreProvider = ChangeNotifierProvider.autoDispose
+    .family<FontIconsStore, List<FontIcon>>(
+        (ref, icons) => FontIconsStore(icons));
 
 class FontIconsStore extends ValueNotifier<List<FontIcon>> {
-  FontIconsStore() : super([]);
+  late final Command<FontIcon, void> like;
+  late final Command<FontIcon, void> unLike;
+  late final Command<FontIcon, void> downloadIcon;
+
+  FontIconsStore([List<FontIcon>? initalValue]) : super(initalValue ?? []) {
+    like = Command.createAsyncNoResult((fontIcon) async {
+      await LikeIcon().call(fontIcon);
+
+      final newValue = value
+          .map((element) => element.id == fontIcon.id
+              ? element.copyWith(isLiked: true)
+              : element)
+          .toList();
+      value = List.from(newValue);
+    });
+
+    unLike = Command.createAsyncNoResult((fontIcon) async {
+      await UnLikeIcon().call(fontIcon);
+      final newValue = value.map((element) => element.id == fontIcon.id
+          ? element.copyWith(isLiked: false)
+          : element);
+      value = List.from(newValue);
+    });
+
+    downloadIcon = Command.createSyncNoResult((fontIcon) {
+      launch(fontIcon.svgUrl.toString());
+    });
+  }
 
   void init(Iterable<FontIcon> fontIcons) {
     value = List.from(fontIcons);
-  }
-
-  void like(FontIcon fontIcon) {
-    value = value
-        .map((element) => element.id == fontIcon.id
-            ? element.copyWith(isLiked: true)
-            : element)
-        .toList();
-  }
-
-  void unLike(FontIcon fontIcon) {
-    value = value
-        .map((element) => element.id == fontIcon.id
-            ? element.copyWith(isLiked: false)
-            : element)
-        .toList();
   }
 }

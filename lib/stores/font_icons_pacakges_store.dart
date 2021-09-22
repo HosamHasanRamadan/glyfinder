@@ -1,11 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../data/font_icons_package.dart';
-
-final fontIconsPackagesStoreProvider =
-    ChangeNotifierProvider((ref) => FontIconsPackagesStore());
 
 class FontIconsPackagesStore extends ValueNotifier<List<FontIconsPackage>> {
   FontIconsPackagesStore([List<FontIconsPackage>? initialValue])

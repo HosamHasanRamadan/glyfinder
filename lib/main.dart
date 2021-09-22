@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import 'configure_dependencies.dart';
+import 'stores/font_icons_pacakges_store.dart';
 import 'views/pages/intro_page.dart';
 
 void main() async {
   await configureDependencies();
   runApp(
-    const ProviderScope(child: MyApp()),
+    MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (context) => getIt<FontIconsPackagesStore>(),
+      ),
+    ], child: const MyApp()),
   );
 }
 

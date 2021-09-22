@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 import '../../../stores/font_icons_pacakges_store.dart';
 import '../icons_search_page.dart';
@@ -64,9 +64,8 @@ class _IconPacks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width * .8;
-    return Consumer(
-      builder: (context, watch, child) {
-        final value = watch(fontIconsPackagesStoreProvider).value;
+    return Consumer<FontIconsPackagesStore>(
+      builder: (context, store, child) {
         return SizedBox(
           width: width,
           child: GridView.count(
@@ -74,7 +73,7 @@ class _IconPacks extends StatelessWidget {
             crossAxisSpacing: 20,
             crossAxisCount: 5,
             children: [
-              ...value.map((e) => Column(
+              ...store.value.map((e) => Column(
                     children: [
                       Image.network(
                         e.imageUrl.toString(),

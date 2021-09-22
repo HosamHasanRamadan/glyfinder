@@ -1,16 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_command/flutter_command.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../commands/icon_commnds/like_icon.dart';
 import '../commands/icon_commnds/unlike_icon.dart';
 import '../data/font_icon.dart';
-
-final fontIconsStoreProvider = ChangeNotifierProvider.autoDispose
-    .family<FontIconsStore, List<FontIcon>>(
-        (ref, icons) => FontIconsStore(icons));
 
 class FontIconsStore extends ValueNotifier<List<FontIcon>> {
   late final Command<FontIcon, void> like;

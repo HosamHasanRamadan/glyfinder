@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import '../../../commands/get_liked_icons.dart';
-import '../../../data/font_icon.dart';
 import '../../../stores/font_icon_store.dart';
 import '../../widgets/icon_tile.dart';
 
@@ -10,33 +11,29 @@ class LikePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _LikePageContent(
-      FontIconsStore(
-        GetLikedIcons().call(),
-      ),
+    return ChangeNotifierProvider(
+      create: (context) => FontIconsStore(GetLikedIcons().call()),
+      child: const _LikePageContent(),
     );
   }
 }
 
 class _LikePageContent extends StatelessWidget {
-  final FontIconsStore fontIconsStore;
-  const _LikePageContent(
-    this.fontIconsStore, {
+  const _LikePageContent({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ValueListenableBuilder<List<FontIcon>>(
-        valueListenable: fontIconsStore,
-        builder: (context, fontIcons, child) {
-          return GridView.extent(
+    return Consumer<FontIconsStore>(
+      builder: (context, fontIconsStore, child) {
+        return Center(
+          child: GridView.extent(
             padding: const EdgeInsets.all(15),
             maxCrossAxisExtent: 200,
             // childAspectRatio: 1,
             children: [
-              ...fontIcons.map(
+              ...fontIconsStore.value.map(
                 (fontIcon) => IconTile(
                   key: ValueKey(fontIcon.id),
                   fontIcon: fontIcon,
@@ -54,9 +51,9 @@ class _LikePageContent extends StatelessWidget {
                 ),
               )
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

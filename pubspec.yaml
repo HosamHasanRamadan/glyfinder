@@ -15,8 +15,6 @@ dependencies:
   cupertino_icons: ^1.0.3
   dio: ^4.0.0
   fpdart: ^0.0.10
-  riverpod: ^0.14.0+3
-  flutter_riverpod: ^0.14.0+3
   flutter_command: ^2.0.1
   functional_listener: ^2.0.2
   dynamic_cached_fonts: ^0.3.1
@@ -29,6 +27,11 @@ dependencies:
   jovial_svg: ^1.0.6
   flutter_markdown: ^0.6.6
   get_it: ^7.2.0
+  mainstream:
+    git: https://github.com/HosamHasanRamadan/mainstream.git
+  futuristic:
+    git: https://github.com/HosamHasanRamadan/futuristic.git
+  provider: ^6.0.0
 
 dev_dependencies:
   import_sorter: ^4.6.0

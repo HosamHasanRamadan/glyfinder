@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'configure_dependencies.dart';
-import 'stores/font_icons_pacakges_store.dart';
 import 'views/pages/intro_page.dart';
 
 void main() async {
   await configureDependencies();
-  runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(
-        create: (context) => getIt<FontIconsPackagesStore>(),
-      ),
-    ], child: const MyApp()),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

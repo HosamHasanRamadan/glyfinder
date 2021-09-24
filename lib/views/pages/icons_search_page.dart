@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_command/flutter_command.dart';
-import 'package:provider/provider.dart';
 
 import '../../commands/icon_commnds/search_for_icons.dart';
 import '../../configure_dependencies.dart';
+import '../../data/font_icon.dart';
 import '../../stores/font_icon_store.dart';
+import '../../utils/widgets/scoped_injector.dart';
 import '../widgets/icon_tile.dart';
+
+const _scope = 'IconsSearchPage';
 
 class IconsSearchPage extends StatefulWidget {
   static PageRoute route(String searchValue) {
@@ -16,8 +19,13 @@ class IconsSearchPage extends StatefulWidget {
         arguments: searchValue,
       ),
       builder: (_) {
-        return ChangeNotifierProvider(
-          create: (context) => getIt<FontIconsStore>(),
+        return ScopedInjector(
+          scopeName: _scope,
+          onPushScope: (scopedGetIt) =>
+              scopedGetIt.registerSingleton<FontIconsStore>(
+            FontIconsStore(),
+            dispose: (store) => store.dispose(),
+          ),
           child: const IconsSearchPage(),
         );
       },
@@ -39,7 +47,7 @@ class _IconsSearchPageState extends State<IconsSearchPage> {
     final searchValue = ModalRoute.of(context)?.settings.arguments as String;
     searchForIcons = Command.createAsyncNoResult((searchValue) async {
       final result = await SearchForIcons().call(searchValue);
-      Provider.of<FontIconsStore>(context, listen: false).init(result);
+      getIt<FontIconsStore>().init(result);
     });
     searchForIcons.call(searchValue);
   }
@@ -67,25 +75,26 @@ class IconsSearchPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FontIconsStore>(
+    return ValueListenableBuilder<List<FontIcon>>(
+      valueListenable: getIt<FontIconsStore>(),
       builder: (ctx, fontIconsStore, __) {
         return GridView.extent(
           padding: const EdgeInsets.all(15),
           maxCrossAxisExtent: 200,
           children: [
-            ...fontIconsStore.value.map(
+            ...fontIconsStore.map(
               (fontIcon) => IconTile(
                 key: ValueKey(fontIcon.id),
                 fontIcon: fontIcon,
                 isLiked: fontIcon.isLiked,
                 onDownload: () {
-                  fontIconsStore.downloadIcon(fontIcon);
+                  getIt<FontIconsStore>().downloadIcon(fontIcon);
                 },
                 onLike: (isLiked) {
                   if (!isLiked) {
-                    fontIconsStore.like(fontIcon);
+                    getIt<FontIconsStore>().like(fontIcon);
                   } else {
-                    fontIconsStore.unLike(fontIcon);
+                    getIt<FontIconsStore>().unLike(fontIcon);
                   }
                 },
               ),

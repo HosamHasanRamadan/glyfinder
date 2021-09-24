@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
+import '../../../configure_dependencies.dart';
+import '../../../data/font_icons_package.dart';
 import '../../../stores/font_icons_pacakges_store.dart';
 import '../icons_search_page.dart';
 
@@ -64,7 +64,8 @@ class _IconPacks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width * .8;
-    return Consumer<FontIconsPackagesStore>(
+    return ValueListenableBuilder<List<FontIconsPackage>>(
+      valueListenable: getIt<FontIconsPackagesStore>(),
       builder: (context, store, child) {
         return SizedBox(
           width: width,
@@ -73,7 +74,7 @@ class _IconPacks extends StatelessWidget {
             crossAxisSpacing: 20,
             crossAxisCount: 5,
             children: [
-              ...store.value.map((e) => Column(
+              ...store.map((e) => Column(
                     children: [
                       Image.network(
                         e.imageUrl.toString(),

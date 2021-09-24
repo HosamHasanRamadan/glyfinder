@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import '../../../commands/get_liked_icons.dart';
+import '../../../configure_dependencies.dart';
+import '../../../data/font_icon.dart';
 import '../../../stores/font_icon_store.dart';
+import '../../../utils/widgets/scoped_injector.dart';
 import '../../widgets/icon_tile.dart';
 
 class LikePage extends StatelessWidget {
   const LikePage({Key? key}) : super(key: key);
 
+  static const _scope = 'LikePage';
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => FontIconsStore(GetLikedIcons().call()),
+    return ScopedInjector(
+      onPushScope: (scopedGetit) =>
+          scopedGetit.registerSingleton<FontIconsStore>(
+              FontIconsStore(GetLikedIcons().call()),
+              dispose: (store) => store.dispose()),
+      scopeName: _scope,
       child: const _LikePageContent(),
     );
   }
@@ -25,7 +32,8 @@ class _LikePageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FontIconsStore>(
+    return ValueListenableBuilder<List<FontIcon>>(
+      valueListenable: getIt<FontIconsStore>(),
       builder: (context, fontIconsStore, child) {
         return Center(
           child: GridView.extent(
@@ -33,19 +41,19 @@ class _LikePageContent extends StatelessWidget {
             maxCrossAxisExtent: 200,
             // childAspectRatio: 1,
             children: [
-              ...fontIconsStore.value.map(
+              ...fontIconsStore.map(
                 (fontIcon) => IconTile(
                   key: ValueKey(fontIcon.id),
                   fontIcon: fontIcon,
                   isLiked: fontIcon.isLiked,
                   onDownload: () {
-                    fontIconsStore.downloadIcon(fontIcon);
+                    getIt<FontIconsStore>().downloadIcon(fontIcon);
                   },
                   onLike: (_) {
                     if (!fontIcon.isLiked) {
-                      fontIconsStore.like(fontIcon);
+                      getIt<FontIconsStore>().like(fontIcon);
                     } else {
-                      fontIconsStore.unLike(fontIcon);
+                      getIt<FontIconsStore>().unLike(fontIcon);
                     }
                   },
                 ),

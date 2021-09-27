@@ -31,10 +31,7 @@ Future<void> configureDependencies({bool isUiThread = true}) async {
     getIt.registerSingleton(FontIconsPackagesStore());
   }
 
-  getIt.registerLazySingleton<FontIconsStore>(
-    () => throw UnimplementedError(
-        "You Can't access global value you have to shadow it"),
-  );
+  getIt.registerFactory<FontIconsStore>(() => FontIconsStore());
 }
 
 class _Modules {

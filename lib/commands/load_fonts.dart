@@ -1,7 +1,7 @@
-import '../../configure_dependencies.dart';
-import '../../data/font_icons_package.dart';
-import '../../services/font_service.dart';
-import '../../services/logger.dart';
+import '../configure_dependencies.dart';
+import '../data/font_icons_package.dart';
+import '../services/font_service.dart';
+import '../services/logger.dart';
 
 class LoadFonts {
   late final Logger _logger;
